@@ -29,10 +29,12 @@ This will open the [locator list window](https://freshman.tech/vim-quickfix-and-
 ## General
 To search inside a custom syntax region use the command `Sisr`.
 The `Sisr`-command takes four arguments (separated by space):
+
 1. `startPattern`: Pattern which the region starts with.
 1. `endPattern`: Pattern which the region starts with.
 1. `pattern`: The pattern to search for within the region.
 1. `ignore`: Ignore lines starting with this pattern.
+
 These patterns will use vims [very-magic](https://vim.fandom.com/wiki/Simplifying_regular_expressions_using_magic_and_no-magic) so for example `{}`-brackets needs to be escaped.
 Furthermore, any backslashes need to be escaped additionally.
 So if one wants to search for the backslash-caracter, then 4(!) backslashes needs to be given.
