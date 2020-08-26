@@ -1,7 +1,6 @@
 # SISR: Search In Syntax Regions
 
 The idea for this plugin started when I wanted to search for a pattern but only inside equation-regions in a tex-document.
-I tried to find out if there was already a simple way to do this but couldn't find anything, except some ad-hoc answers on StackExchange.
 
 This plugin provides commands to search within specified syntax regions.
 One specifies these regions by a regex-pattern and can also ignore certain lines which for example are comments.
