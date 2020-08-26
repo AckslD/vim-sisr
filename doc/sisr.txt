@@ -1,0 +1,102 @@
+*sisr.txt* search in syntax regions
+          ▄▄▄▄▄▄▄ ▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄   ~
+         █       █   █       █   ▄  █  ~
+         █  ▄▄▄▄▄█   █  ▄▄▄▄▄█  █ █ █  ~
+         █ █▄▄▄▄▄█   █ █▄▄▄▄▄█   █▄▄█▄ ~
+         █▄▄▄▄▄  █   █▄▄▄▄▄  █    ▄▄  █~
+          ▄▄▄▄▄█ █   █▄▄▄▄▄█ █   █  █ █~
+         █▄▄▄▄▄▄▄█▄▄▄█▄▄▄▄▄▄▄█▄▄▄█  █▄█~
+        allows searching within regions
+     defined by start and end regex-patterns
+
+INTRODUCTION                              *sisr*
+
+The idea for this plugin started when I wanted to search for a pattern but only
+inside equation-regions in a tex-document. I tried to find out if there was
+already a simple way to do this but couldn't find anything, except some ad-hoc
+answers on StackExchange.
+
+This plugin provides commands to search within specified syntax regions.
+One specifies these regions by a regex-pattern and can also ignore certain
+lines which for example are comments. The start- and end-pattern of a region do
+not need to be different, for example as in tex where inline-math starts and
+ends with `$`. The matches of the search are populated in the location list
+which can be traversed using |lnext| and |lprevious|.
+
+USAGE                                     *sisr-usage*
+
+To search inside a custom syntax region use the command *Sisr*.
+The *Sisr*-command takes four arguments (separated by space):
+
+    1. *startPattern* : Pattern which the region starts with.
+    2. *endPattern* : Pattern which the region starts with.
+    3. *pattern* : The pattern to search for within the region.
+    4. *ignore* : Ignore lines starting with this pattern.
+
+These patterns will use vims |very-magic|, so for example `{}`-brackets needs
+to be escaped. Furthermore, any backslashes need to be escaped additionally.
+So if one wants to search for the backslash-caracter, then 4(!) backslashes
+needs to be given.
+
+To for example search for `Einstein` within `\cite{...}`-regions, do:
+>
+    Sisr \\\\cite\\{ \\} Einstein \\%
+<
+
+If you want to do this often you can create your own dedicated function and
+command by for example:
+>
+    function! SisrTexCite(pattern)
+        let l:startPattern = "\\\\cite\\{"
+        let l:endPattern = "\\}"
+        let l:comment = "\\%"
+        call sisr#syntax_region_search(l:startPattern, l:endPattern,
+                                     \ a:pattern, l:comment)
+    endfunction
+
+    command! -nargs=1 SisrTexCite call SisrTexCite(<f-args>)
+<
+
+                                          *sisr-tex*
+For tex-documents there is one pre-defined command for searching within
+math-regions, including both `$...$` and `\begin{equation}...\end{equation}`
+simultaneously. To search for for example `x` only within math-regions of a
+tex document, do:
+>
+    SisrTexEq x
+<
+which by default ignores any comments (starting with `%`).
+This will open the |location-list| and you can traverse the matches by using
+|lnext| and |lprevious| which you can optionally bind to some keys.
+
+FUNCTIONS                                 *sisr-functions*
+
+The main function of *Sisr* is *sisr#syntax_regions_search* which takes the
+following three arguments:
+
+    1. *regionPatterns* : List of [*startPattern*, *endPattern*].
+       Each entry of the list defines a region to search in.
+       For example to search in math-regions of a tex-document, this list
+       can be given as
+>
+    [["\\$", "\\$"], ["\\\\begin\\{equation\\*?\\}, "\\\\end\\{equation\\*?\\}]]
+<
+       Note that |very-magic| is used, so `?` should not be escaped.
+    2. *pattern* : The pattern to search for within the region.
+    3. *ignore* : Ignore lines starting with this pattern.
+
+ISSUES                                    *sisr-issues*
+
+Using the commands currently removes and existing visual selection.
+
+*Sisr* seem to not like some type of folding and sometimes fails.
+
+CONTRIBUTION                              *sisr-contribution*
+
+*Sisr* is in its infancy and any contribution and feedback is welcome.
+Additional custom commands such as the one for equations in tex for other
+syntax regions would be nice but I'm also happy to hear some ideas
+of maybe a better way to structure extensions in order to not have to support
+all possible languages etc.
+
+For contribution, go to `https://github.com/AckslD/vim-sisr`.
