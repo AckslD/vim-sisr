@@ -34,6 +34,7 @@ The `Sisr`-command takes three arguments (separated by space):
 1. `ignorePattern`: Name of regions to exclude even if currently in `regionPattern` (can be regex),
     e.g. "texComment".
 
+### Example: search in `cite{}`
 To for example search for `Einstein` within `\cite{...}`-regions, do:
 ```vim
 Sisr texCite Einstein texComment
@@ -51,3 +52,9 @@ command! -nargs=1 SisrTexCite call SisrTexCite(<f-args>)
 ```
 
 To find out what certain syntax regions are called you can use the function `sisr#get_current_regions` to get the names of the regions at the current cursor location.
+
+### Example: search everything except comments
+To for example search a whole tex-document but exclude comments one can use a `regionPattern` that matches everything and an `ignorePattern` that matches comments:
+```vim
+Sisr .* foo texComment
+```
